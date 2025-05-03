@@ -1,16 +1,16 @@
 import React from "react";
 import styles from "./Feedback.module.css";
 
-const Feedback = () => {
-  return(
+const Feedback = ({ counters }) => {
+  return (
     <>
-    <p>Good:</p>
-    <p>Neutral:</p>
-    <p>Bad:</p>
-    <p>Total:</p>
-    <p>Positive:</p>
-</>
-  )
+      {Object.entries(counters).map(([key, value]) => (
+        <p key={key}>
+          {key}:{value}
+        </p>
+      ))}
+    </>
+  );
 };
 
 export default Feedback;

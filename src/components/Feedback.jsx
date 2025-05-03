@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./Feedback.module.css";
 
-const Feedback = ({ counters }) => {
+const Feedback = ({ counters, total, positive }) => {
   return (
     <>
       {Object.entries(counters).map(([key, value]) => (
@@ -9,6 +9,8 @@ const Feedback = ({ counters }) => {
           {key}:{value}
         </p>
       ))}
+      <p>total:{total}</p>
+      <p>positive:{positive}%</p>
     </>
   );
 };

@@ -9,13 +9,22 @@ const App = () => {
     good: 0,
     bad: 0,
     neutral: 0,
+    
   });
 
+  const [total,setTotal]=useState(0);
+  const [positive,setPositive]=useState(0);
   const handleClick = (key) => {
-    setCounters((prev) => ({
-      ...prev,
-      [key]: prev[key] + 1,
-    }));
+    setCounters((prev) => {
+     const newCount={ ...prev, [key]: prev[key] + 1,};
+     const newTotal =newCount.good+newCount.bad+newCount.neutral;
+     setTotal(newTotal);
+     const newPositive= parseInt(newCount.good/newTotal*100)
+     setPositive(newPositive);
+     return newCount;
+      
+    });
+    
   };
 
   const handleReset = () => {
@@ -24,6 +33,8 @@ const App = () => {
       bad: 0,
       neutral: 0,
     });
+    setTotal(0);
+    setPositive(0);
   };
 
   return (
@@ -31,7 +42,7 @@ const App = () => {
       <div className={styles.appBody}>
         <Description />
         <Options handleClick={handleClick} handleReset={handleReset} />
-        <Feedback counters={counters} />
+        <Feedback counters={counters} total={total} positive={positive}/>
       </div>
     </div>
   );

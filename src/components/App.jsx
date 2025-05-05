@@ -5,44 +5,69 @@ import Options from "./Options";
 import styles from "./App.module.css";
 
 const App = () => {
-  const [counters, setCounters] = useState({
-    good: 0,
-    bad: 0,
-    neutral: 0,
-    
+  const [counters, setCounters] = useState(() => {
+    const saved = localStorage.getItem("counters");
+    return saved
+      ? JSON.parse(saved)
+      : {
+          good: 0,
+          bad: 0,
+          neutral: 0,
+        };
   });
 
-  const [total,setTotal]=useState(0);
-  const [positive,setPositive]=useState(0);
-  const handleClick = (key) => {
+  const [total, setTotal] = useState(() => {
+    const saved = localStorage.getItem("total");
+    return saved ? JSON.parse(saved) : 0;
+  });
+  const [positive, setPositive] = useState(() => {
+    const saved = localStorage.getItem("positive");
+    return saved ? JSON.parse(saved) : 0;
+  });
+  const updateFeedback = (key) => {
     setCounters((prev) => {
-     const newCount={ ...prev, [key]: prev[key] + 1,};
-     const newTotal =newCount.good+newCount.bad+newCount.neutral;
-     setTotal(newTotal);
-     const newPositive= parseInt(newCount.good/newTotal*100)
-     setPositive(newPositive);
-     return newCount;
-      
+      const newCount = { ...prev, [key]: prev[key] + 1 };
+      const totalFeedback = newCount.good + newCount.bad + newCount.neutral;
+      setTotal(totalFeedback);
+      const newPositive = Math.round((newCount.good / totalFeedback) * 100);
+      setPositive(newPositive);
+      localStorage.setItem("counters", JSON.stringify(newCount));
+      localStorage.setItem("total", JSON.stringify(totalFeedback));
+      localStorage.setItem("positive", JSON.stringify(newPositive));
+      return newCount;
     });
-    
   };
 
   const handleReset = () => {
-    setCounters({
+    const reset = {
       good: 0,
       bad: 0,
       neutral: 0,
-    });
+    };
+    setCounters(reset);
     setTotal(0);
     setPositive(0);
+    localStorage.removeItem("counters");
+    localStorage.removeItem("total");
+    localStorage.removeItem("positive");
   };
 
   return (
     <div>
       <div className={styles.appBody}>
         <Description />
-        <Options handleClick={handleClick} handleReset={handleReset} />
-        <Feedback counters={counters} total={total} positive={positive}/>
+
+        <Options
+          updateFeedback={updateFeedback}
+          handleReset={handleReset}
+          showReset={total > 0}
+        />
+
+        {total === 0 ? (
+          <p>No feedback yet!</p>
+        ) : (
+          <Feedback counters={counters} total={total} positive={positive} />
+        )}
       </div>
     </div>
   );

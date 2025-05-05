@@ -1,34 +1,33 @@
 import React, { useState } from "react";
 import styles from "./Options.module.css";
 
-
-const Options = ({handleClick,handleReset}) => {
+const Options = ({ updateFeedback, handleReset, showReset }) => {
+ 
   
-
   return (
     <div>
       <button
         onClick={() => {
-          handleClick("good");
+          updateFeedback("good");
         }}
       >
         Good
       </button>
       <button
         onClick={() => {
-          handleClick("neutral");
+          updateFeedback("neutral");
         }}
       >
         Neutral
       </button>
       <button
         onClick={() => {
-          handleClick("bad");
+          updateFeedback("bad");
         }}
       >
         Bad
       </button>
-      <button onClick={handleReset}>Reset</button>
+      {showReset && (<button onClick={handleReset}>Reset</button>)}
     </div>
   );
 };
